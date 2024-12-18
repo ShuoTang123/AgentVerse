@@ -47,6 +47,13 @@ else:
             "OpenAI API key is not set. Please set an environment variable OPENAI_API_KEY or "
             "AZURE_OPENAI_API_KEY."
         )
+        OPENAI_API_KEY = "None"
+        OPENAI_BASE_URL = "None"
+        DEFAULT_CLIENT = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+        DEFAULT_CLIENT_ASYNC = AsyncOpenAI(
+            api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL
+        )
+        
     elif OPENAI_API_KEY:
         DEFAULT_CLIENT = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
         DEFAULT_CLIENT_ASYNC = AsyncOpenAI(
@@ -463,6 +470,7 @@ class OpenAIChat(BaseChatModel):
             "gpt-4-1106-preview": 0.01,
             "gpt-4-0125-preview": 0.01,
             "llama-2-7b-chat-hf": 0.0,
+            'llama3-8b-instruct':0.0
         }
 
         output_cost_map = {
@@ -478,6 +486,7 @@ class OpenAIChat(BaseChatModel):
             "gpt-4-1106-preview": 0.03,
             "gpt-4-0125-preview": 0.03,
             "llama-2-7b-chat-hf": 0.0,
+            "llama3-8b-instruct":0.0
         }
 
         model = self.args.model

@@ -7,6 +7,7 @@ LOCAL_LLMS = [
     "llama-2-70b-chat-hf",
     "vicuna-7b-v1.5",
     "vicuna-13b-v1.5",
+    "llama3-8b-instruct"
 ]
 LOCAL_LLMS_MAPPING = {
     "llama-2-7b-chat-hf": {
@@ -34,6 +35,11 @@ LOCAL_LLMS_MAPPING = {
         "base_url": "http://localhost:5000/v1",
         "api_key": "EMPTY",
     },
+    "llama3-8b-instruct":{
+        "hf_model_name": "/home/ubuntu/xhpang/llama3-8b-instruct-hf",
+        "base_url": "http://localhost:8080/v1",
+        "api_key": "EMPTY"
+    }
 }
 
 

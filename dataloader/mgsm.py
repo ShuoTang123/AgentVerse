@@ -6,6 +6,7 @@ import re
 
 @dataloader_registry.register("tasksolving/mgsm/gpt-4")
 @dataloader_registry.register("tasksolving/mgsm/gpt-3.5")
+@dataloader_registry.register("tasksolving/mgsm/vllm")
 class MGSMLoader(DataLoader):
     def __init__(self, path: str):
         self.answer_pat = re.compile(r"#### (-?\d+)")

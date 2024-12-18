@@ -12,7 +12,7 @@ from . import memory_registry
 from .base import BaseMemory
 from agentverse.llms.utils import count_message_tokens, count_string_tokens
 from agentverse.llms import OpenAIChat
-from agentverse.llms.openai import DEFAULT_CLIENT as openai_client
+# from agentverse.llms.openai import DEFAULT_CLIENT as openai_client
 
 @memory_registry.register("chat_history")
 class ChatHistoryMemory(BaseMemory):
@@ -205,6 +205,8 @@ Latest Development:
         prompt = self.SUMMARIZATION_PROMPT.format(
             summary=self.summary, new_events=new_events_batch
         )
+        from agentverse.llms.openai import DEFAULT_CLIENT as openai_client
+
 
         self.summary = await openai_client.chat.completions.acreate(
             messages=[{"role": "user", "content": prompt}],

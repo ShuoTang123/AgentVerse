@@ -55,6 +55,46 @@ class TaskSolving:
         environment: BasicEnvironment = load_environment(env_config)
 
         return cls(environment=environment, task=task)
+    
+    @classmethod
+    def from_task_ruiye(cls, task: str, tasks_dir: str, model_url:str, model_name:str):
+        """Build an AgentVerse from a task name.
+        The task name should correspond to a directory in `tasks` directory.
+        Then this method will load the configuration from the yaml file in that directory.
+        """
+        # Prepare the config of the task
+        task_config = prepare_task_config(task, tasks_dir)
+
+        # Build the environment
+        env_config = task_config["environment"]
+
+        # Build agents for all pipeline (task)
+        agents = {}
+        for i, agent_config in enumerate(task_config["agents"]):
+            # print(agent_config['llm'])
+            agent_config['llm'].args.model = model_name
+            agent_config['llm'].client_args['base_url'] = model_url
+            if agent_config.get("agent_type", "") == "critic":
+                # print(agent_config)
+                agent = load_agent(agent_config)
+                agents[AGENT_TYPES.CRITIC] = [
+                    copy.deepcopy(agent)
+                    for _ in range(task_config.get("cnt_agents", 1) - 1)
+                ]
+            else:
+                agent_type = AGENT_TYPES.from_string(agent_config.get("agent_type", ""))
+                agents[agent_type] = load_agent(agent_config)
+                
+        env_config["agents"] = agents
+
+        env_config["task_description"] = task_config.get("task_description", "")
+        env_config["max_rounds"] = task_config.get("max_rounds", 3)
+
+        environment: BasicEnvironment = load_environment(env_config)
+
+        return cls(environment=environment, task=task)
+    
+    
 
     def run(self):
         """Run the environment from scratch until it is done."""
@@ -68,7 +108,7 @@ class TaskSolving:
             )
             self.logs += logs
         self.environment.report_metrics()
-        self.save_result(previous_plan, result, self.environment.get_spend())
+        # self.save_result(previous_plan, result, self.environment.get_spend())
         return previous_plan, result, self.logs
 
     def singleagent_thinking(self, preliminary_solution, advice) -> str:
